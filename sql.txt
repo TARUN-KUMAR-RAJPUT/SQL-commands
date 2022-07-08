@@ -1,0 +1,239 @@
+
+
+drop table student
+
+create table student( id int not null, name varchar(10), mobile varchar(12) )
+
+select * from student
+select count(*) from student;
+
+insert into student values(1,'Tarun',123)
+insert into student values (2, 'Itachi', 456)
+insert into student values (3, 'Sasuke', 789)
+
+select * from student
+select count(*) from student;
+
+alter table student add(roll varchar(10))
+
+select * from student
+
+update student set roll = 50 where id = 1
+update student set roll = 60 where id = 2
+update student set roll = 70 where id = 3
+
+
+select * from student
+
+
+delete from student where name = 'Sasuke'
+select * from student
+
+select name from student where roll >= 50
+
+
+insert into student values (1, 'Obito', 321, 80)
+insert into student values (1, 'Kakashi', 421, 10)
+insert into student values (2, 'Rin', 231, 20)
+
+
+select sum(roll) from student
+select sum(id) from student
+
+
+select * from student order by id
+select name from student order by roll
+
+
+select id from student group by id
+select count(name),id from student group by id
+select id, count(name) from student group by id having count(name) > 1
+
+
+
+
+create table tab1 (
+    id int,
+    name varchar(10),
+    roll varchar(10)
+)
+
+insert into tab1 values (1, 'Naruto', 11)
+insert into tab1 values (2, 'Lee', 12)
+insert into tab1 values (3, 'Sakura', 13)
+insert into tab1 values (4, 'Hinata', 14)
+insert into tab1 values (5, 'Jiraya', 15)
+
+
+
+select student.name, student.roll
+from student
+INNER JOIN tab1 
+ON student.id = tab1.id
+
+
+select tab1.name, tab1.roll
+from tab1
+inner join student 
+on tab1.id = student.id
+
+
+select student.name, student.roll
+from student
+LEFT JOIN tab1 
+ON student.id = tab1.id
+
+
+select student.name, student.roll
+from student
+Right JOIN tab1 
+ON student.id = tab1.id
+
+
+RENAME TABLE old_table_name TO new_table_name;
+
+
+
+
+\\
+
+create table DEPT( id number(7), name varchar2(25))
+
+create table EMP( id number(7), last_name varchar2(25), first_name varchar2(25), dep_id number(7))
+
+select * from DEPT
+select * from EMP
+
+create table EMP2( id number(7), last_name varchar2(25), first_name varchar2(25), salary number(10), dep_id number(7))
+
+select * from EMP2
+
+drop table EMP
+
+rename table EMP2 to EMP;
+
+-- Rename is not working...
+
+alter table EMP2 drop column first_name;
+
+desc EMP2
+
+alter table EMP2 add constraint my_emp_id_pk primary key (id)
+
+alter table DEPT add constraint my_dep_id_pk primary key (id)
+
+
+alter table EMP2 
+add constraint d_id 
+foreign key (my_fk_emp) 
+references  EMP2(dep_id);
+
+
+desc EMP2
+desc DEPT
+
+
+alter table EMP2 add(commission number(20));
+
+alter table EMP2 add check (commission >= 0);
+
+alter table EMP2 add check (salary >= 10000);
+
+alter table EMP2 add check (last_name is not null);
+
+
+
+
+\\
+
+1.
+select * from all_tables where owner = 'HR'
+
+SELECT * FROM ALL_TABLES;
+
+2.
+drop table demo
+
+3. 
+PURGE RECYCLEBIN;
+
+4.
+create table demo( id number(7), fname varchar2(25), lname varchar2(25), sal number(10), hire date, email varchar2(25))
+
+insert into demo values (101, 'amrit', 'raj', 10000, TO_DATE('10/10/2021', 'DD/MM/YYYY'), 'araj@comp.com')
+
+insert into demo values (102, 'bhavna', 'sharma', 9000, TO_DATE('10/10/2021', 'DD/MM/YYYY'), 'bsharma@comp.com')
+
+insert into demo values (103, 'teena', 'gandhi', 90000, TO_DATE('10/10/2021', 'DD/MM/YYYY'), 'tgandhi@comp.com')
+
+insert into demo values (104, 'astha', 'jain', 70000, TO_DATE('10/10/2021', 'DD/MM/YYYY'), 'ajain@comp.com')
+
+insert into demo values (105, 'amrit', 'poul', 10000, TO_DATE('10/10/2021', 'DD/MM/YYYY'), 'apoul@comp.com')
+
+
+select * from demo
+
+6.
+select *from demo where sal = (select Max(sal) from demo);
+
+select * from demo group by sal order by  sal desc limit 1,1
+
+select fname, MAX(sal) AS sal 
+from demo 
+where sal <> (select MAX(sal) 
+from demo)
+
+7.
+SELECT fname, MAX(sal) AS sal 
+FROM demo
+WHERE sal IN
+(SELECT sal FROM demo MINUS SELECT MAX(sal) 
+FROM demo); 
+
+8.
+select id, fname, sal, RANK () over (order by sal DESC) "Rank" from demo;
+
+\\
+
+1)
+select location_id, street_address ,city,state_province,country_id 
+from locations
+Natural JOIN departments;
+
+
+2)
+select E.last_name,E.DEPARTMENT_ID,D.Department_name from employees E
+JOIN departments D on E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+
+
+3)
+SELECT E.last_name, E.job_id, E.department_id, D.department_name FROM employees E
+JOIN departments D ON (E.department_id = D.department_id)
+JOIN locations L ON (D.location_id = L.location_id) 
+WHERE LOWER(L.city) = 'toronto';
+
+4)
+SELECT E.last_name "E
+4)
+SELECT E.last_name "Employee", E.employee_id "EMP#", M.last_name "Manager", M.employee_id "Mgr#" 
+FROM employees E 
+join employees M ON (E.manager_id = M.employee_id);
+
+
+5)
+SELECT E.last_name "Employee", E.employee_id "EMP#",
+	M.last_name "Manager", M.employee_id "Mgr#"
+	FROM employees E
+	LEFT OUTER JOIN employees M
+	ON (E.manager_id = M.employee_id);
+
+\\
+
+1.SQL> select Pname,DOB from programmer where EXTRACT(MONTH from DOB)=1;
+2.SQL> select count(*) from programmer p join studies s on (p.pname=s.pname) where Course='PGDCA';
+
+3.SQL> select pname ,trunc(to_number(sysdate-to_date(DOJ))/365) Experience from programmer order by pname desc
+
+4.select s.title,s.dev_in from software s join programmer p on(s.Pname=p.Pname) where(s.dev_in='c' and p.gender='F')
+
+10.select count(*) from programmer join studies using(pname) where gender='F' and round((SYSDATE-doj)/30/12, 1) > 2;
